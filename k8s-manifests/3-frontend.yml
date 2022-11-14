@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-web-app
+  namespace: development
+spec:
+  selector:
+    matchLabels:
+      app: todo-web-app
+  # remove replica if using gitops
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: todo-web-app
+    spec:
+      containers:
+      - name: todo-web-app
+        image: yolix/todo-web-app:v1
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_API_URL
+          value: http://k8s-staging-todoapil-bd3063660c-6532ead71a3cf825.elb.us-east-1.amazonaws.com/api
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-web-app
+  namespace: development
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: external
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+    # service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 3000
+  selector:
+    app: todo-web-app
