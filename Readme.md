@@ -99,7 +99,7 @@ $ kubectl delete service SERVICE_NAME -n development
 # Eliminar el loadbalancer controller 
 $ terraform destroy --target module.loadbalancer-controller
 # Eliminar los Fargate profiles
-$ terraform-aws % terraform destroy --target module.eks-fargate
+$ terraform destroy --target module.eks-fargate
 # Eliminar el EKS Cluster y todos los recursos de Red
-terraform-aws % terraform destroy --target module.eks-cluster
+$ terraform destroy --target module.eks-cluster
 ```
